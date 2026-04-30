@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Your Brain Has a Map — The Cognitive Distribution Map</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700;1,900&family=Syne:wght@700;800&family=Manrope:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet"/>
+<style>
+:root {
+  --bg:#0a0e1a; --surface:#111827; --border:#1e293b;
+  --text:#e2e8f0; --muted:#64748b;
+  --bore:#818cf8; --bore-bg:rgba(129,140,248,0.08);
+  --anx:#f87171;  --anx-bg:rgba(248,113,113,0.08);
+  --flow:#34d399; --flow-bg:rgba(52,211,153,0.08);
+  --gold:#fbbf24; --blue:#60a5fa;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:'Manrope',sans-serif;font-size:16px;line-height:1.75;overflow-x:hidden}
+
+/* ── HEADER ── */
+header{padding:72px 24px 60px;text-align:center;position:relative;overflow:hidden;z-index:1;}
+header::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 90% 70% at 50% 0%,rgba(96,165,250,0.10),transparent);z-index:0;}
+
+.tag{position:relative;z-index:1;display:inline-block;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);border:1px solid rgba(251,191,36,0.3);padding:5px 14px;border-radius:100px;margin-bottom:24px}
+h1{position:relative;z-index:1;font-family:'Playfair Display',serif;font-size:clamp(32px,6vw,64px);font-weight:900;line-height:1.05;color:#fff;max-width:760px;margin:0 auto 18px;letter-spacing:-0.5px;}
+h1 span{color:var(--blue)}
+.hero-sub{position:relative;z-index:1;font-size:clamp(15px,2vw,18px);color:var(--muted);max-width:520px;margin:0 auto 28px;font-weight:400}
+.read-time{position:relative;z-index:1;font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:2px;color:rgba(100,116,139,0.7);text-transform:uppercase}
+
+/* ── MAIN ── */
+main{position:relative;z-index:1;max-width:820px;margin:0 auto;padding:0 24px 80px}
+section{margin:60px 0}
+.sec-tag{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:4px;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:10px}
+h2{font-family:'Playfair Display',serif;font-size:clamp(22px,4vw,34px);font-weight:800;color:#fff;line-height:1.15;margin-bottom:16px}
+h3{font-family:'Playfair Display',serif;font-size:18px;font-weight:700;margin-bottom:10px}
+p{color:#cbd5e1;margin-bottom:14px;font-size:15.5px}
+.hr{height:1px;background:var(--border);margin:52px 0}
+
+.pq{border-left:3px solid var(--blue);padding:16px 24px;margin:24px 0;background:rgba(96,165,250,0.06);border-radius:0 8px 8px 0}
+.pq p{font-family:'Playfair Display',serif;font-size:18px;color:#fff;font-style:italic;margin:0;line-height:1.5}
+
+.graph-wrap{background:var(--surface);border:1px solid var(--border);border-radius:16px;padding:36px 28px 44px;margin:32px 0;position:relative;}
+.graph-title{font-family:'JetBrains Mono',monospace;font-size:11px;letter-spacing:3px;text-transform:uppercase;color:var(--gold);margin-bottom:24px}
+.cartesian-svg{width:100%;max-width:700px;display:block;margin:0 auto}
+
+.zone-card{border-radius:12px;padding:26px 28px;margin:20px 0;border:1px solid}
+.zone-bore{background:var(--bore-bg);border-color:rgba(129,140,248,0.25)}
+.zone-anx{background:var(--anx-bg);border-color:rgba(248,113,113,0.25)}
+.zone-flow{background:var(--flow-bg);border-color:rgba(52,211,153,0.25)}
+.zone-head{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+.zone-dot{width:12px;height:12px;border-radius:50%;flex-shrink:0}
+.zone-head h3{margin:0}
+.bore-col{color:var(--bore)} .anx-col{color:var(--anx)} .flow-col{color:var(--flow)}
+
+.formula{background:#0a0e1a;border:1px solid var(--border);border-radius:8px;padding:14px 20px;margin:14px 0;font-family:'JetBrains Mono',monospace;font-size:13px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.formula-eq{color:var(--gold);font-weight:600}
+.formula-arr{color:var(--muted)}
+.f-bore{color:var(--bore)} .f-anx{color:var(--anx)} .f-flow{color:var(--flow)}
+
+.loop{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:30px 22px;margin:26px 0;text-align:center}
+.loop-label{font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:3px;text-transform:uppercase;color:var(--muted);margin-bottom:22px;display:block}
+
+/* ── ANXIETY EXPLAINER CARDS ── */
+.anx-explain{
+  display:grid;grid-template-columns:1fr 1fr;gap:12px;
+  margin:20px 0;
+}
+.anx-card{
+  background:#0f172a;border:1px solid rgba(248,113,113,0.2);
+  border-radius:10px;padding:16px 18px;
+}
+.anx-card .ac-step{
+  font-family:'JetBrains Mono',monospace;font-size:10px;
+  letter-spacing:2px;text-transform:uppercase;color:var(--anx);
+  opacity:0.7;margin-bottom:6px;display:block;
+}
+.anx-card h5{font-size:14px;font-weight:700;color:#fff;margin-bottom:4px}
+.anx-card p{font-size:13px;color:var(--muted);margin:0}
+.anx-vicious{
+  background:rgba(248,113,113,0.06);
+  border:1px solid rgba(248,113,113,0.15);
+  border-radius:10px;padding:20px 24px;margin:20px 0;
+}
+.anx-vicious h4{color:var(--anx);font-size:15px;font-weight:700;margin-bottom:12px}
+.anx-vicious .v-row{
+  display:flex;align-items:flex-start;gap:12px;
+  padding:8px 0;border-bottom:1px solid rgba(248,113,113,0.08);
+}
+.anx-vicious .v-row:last-child{border-bottom:none}
+.v-icon{font-size:16px;flex-shrink:0;margin-top:2px}
+.v-text{font-size:14px;color:#cbd5e1}
+.v-text strong{color:#fca5a5}
+
+/* ── STEPS ── */
+.steps{list-style:none;margin:24px 0;counter-reset:st}
+.steps li{counter-increment:st;display:grid;grid-template-columns:44px 1fr;gap:16px;margin-bottom:28px;align-items:start}
+.steps li::before{content:counter(st);font-family:'Playfair Display',serif;font-size:26px;font-weight:800;color:var(--blue);line-height:1;margin-top:2px}
+.steps li h4{font-size:15px;font-weight:700;color:#fff;margin-bottom:6px}
+.steps li p{font-size:14px;color:var(--muted);margin:0 0 6px 0}
+.steps li .step-detail{
+  font-size:13.5px;color:#94a3b8;
+  background:#0f172a;border-left:2px solid var(--blue);
+  padding:10px 14px;border-radius:0 6px 6px 0;margin-top:8px;
+}
+
+/* ── LADDER ── */
+.ladder{display:flex;flex-direction:column;gap:10px;margin:20px 0}
+.rung{display:flex;align-items:flex-start;gap:14px;padding:16px 20px;border-radius:8px;background:var(--surface);border-left:4px solid}
+.rung-1{border-color:#60a5fa} .rung-2{border-color:#fbbf24} .rung-3{border-color:#f97316} .rung-4{border-color:#ef4444}
+.rung-num{font-family:'Playfair Display',serif;font-size:22px;font-weight:800;width:32px;flex-shrink:0;margin-top:2px}
+.rung-1 .rung-num{color:#60a5fa} .rung-2 .rung-num{color:#fbbf24} .rung-3 .rung-num{color:#f97316} .rung-4 .rung-num{color:#ef4444}
+.rung-body{flex:1}
+.rung-info h5{font-size:14px;font-weight:700;color:#fff;margin-bottom:3px}
+.rung-info p{font-size:13px;color:var(--muted);margin:0 0 6px 0}
+.rung-detail{font-size:12.5px;color:#64748b;line-height:1.6}
+.rung-badge{margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:1px;padding:4px 10px;border-radius:100px;white-space:nowrap;align-self:flex-start;margin-top:2px}
+.badge-flow{background:var(--flow-bg);color:var(--flow)}
+.badge-anx{background:var(--anx-bg);color:var(--anx)}
+
+.closing{text-align:center;padding:60px 32px;background:linear-gradient(135deg,rgba(96,165,250,0.06),rgba(52,211,153,0.06));border:1px solid var(--border);border-radius:20px;margin-top:72px}
+.closing h2{font-size:clamp(24px,4vw,40px);margin-bottom:16px;color:#fff}
+.closing p{color:var(--muted);max-width:480px;margin:0 auto 8px;font-size:15px}
+.closing .line{width:40px;height:2px;background:var(--gold);margin:26px auto}
+
+@keyframes up{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.fade{opacity:0;animation:up .7s ease forwards}
+.d1{animation-delay:.1s}.d2{animation-delay:.25s}.d3{animation-delay:.4s}
+
+
+
+@media(max-width:600px){
+  .formula{font-size:11px} .rung-badge{display:none}
+  .anx-explain{grid-template-columns:1fr}
+  .rung{flex-wrap:wrap}
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════
+     HEADER
+═══════════════════════════════════════════ -->
+<header>
+  <div class="tag fade d1">By Abhishek Roy</div>
+  <h1 class="fade d2">Your Brain Has a <span>Map.</span><br>You're Just in the Wrong Zone.</h1>
+  <p class="hero-sub fade d3">The one Cartesian framework every student needs to understand before they open their next textbook.</p>
+  <span class="read-time fade d3">✦ 4 min read &nbsp;·&nbsp; Cognitive Distribution Map</span>
+</header>
+
+<main>
+
+<!-- HOOK -->
+<section>
+  <p>You sit down to study. <strong>10 minutes later, you're on your phone.</strong></p>
+  <p>Not laziness. Not weak will. Your brain detected a mismatch.</p>
+  <div class="pq"><p>"Every second you spend studying, your brain is plotting coordinates. Get the coordinate wrong — learning collapses. Get it right — time disappears."</p></div>
+  <p>There's a map your brain runs on. It doesn't care about your exams. It cares about one thing: <strong>are you in the right zone?</strong></p>
+</section>
+
+<div class="hr"></div>
+
+<!-- THE CARTESIAN -->
+<section>
+  <span class="sec-tag">The Framework</span>
+  <h2>The Cognitive Distribution Map</h2>
+
+  <p>Picture a Cartesian graph. Two axes. Three zones. This is how your brain operates every time you study.</p>
+  <p>
+    <strong>X-Axis → Skill</strong> — your ability; what you already know and can do.<br>
+    <strong>Y-Axis → Cognitive Demand</strong> — the difficulty of the task; how much mental effort it requires.
+  </p>
+
+  <div class="graph-wrap">
+    <p class="graph-title">// Cognitive Distribution Map — Full Cartesian View</p>
+    <svg class="cartesian-svg" viewBox="0 0 680 500" xmlns="http://www.w3.org/2000/svg" font-family="Manrope,sans-serif">
+      <!-- Axis lines -->
+      <line x1="70" y1="30" x2="70" y2="440" stroke="#60a5fa" stroke-width="2"/>
+      <line x1="70" y1="440" x2="640" y2="440" stroke="#60a5fa" stroke-width="2"/>
+      <polygon points="70,26 65,42 75,42" fill="#60a5fa"/>
+      <polygon points="644,440 628,435 628,445" fill="#60a5fa"/>
+      <line x1="70" y1="235" x2="640" y2="235" stroke="#1e293b" stroke-dasharray="5,7" stroke-width="1.2"/>
+      <line x1="355" y1="30" x2="355" y2="440" stroke="#1e293b" stroke-dasharray="5,7" stroke-width="1.2"/>
+
+      <!-- ANXIETY ZONE: top-left — LOW skill, HIGH demand -->
+      <rect x="73" y="33" width="278" height="200" rx="10" fill="rgba(248,113,113,0.09)" stroke="#f87171" stroke-width="1.8" stroke-dasharray="7,5"/>
+      <text x="212" y="95" text-anchor="middle" font-family="Playfair Display,serif" font-size="16" font-weight="700" fill="#f87171">ANXIETY ZONE</text>
+      <text x="212" y="116" text-anchor="middle" font-size="11" fill="#f87171" opacity="0.7">Low Skill · High Cognitive Demand</text>
+      <text x="212" y="142" text-anchor="middle" font-size="11" fill="#94a3b8">Brain sees it as a threat.</text>
+      <text x="212" y="160" text-anchor="middle" font-size="11" fill="#94a3b8">Fight or flight → Avoidance.</text>
+      <circle cx="140" cy="75" r="6" fill="#f87171" opacity="0.85"/>
+
+      <!-- BOREDOM ZONE: bottom-right — HIGH skill, LOW demand -->
+      <rect x="357" y="238" width="278" height="200" rx="10" fill="rgba(129,140,248,0.09)" stroke="#818cf8" stroke-width="1.8" stroke-dasharray="7,5"/>
+      <text x="496" y="305" text-anchor="middle" font-family="Playfair Display,serif" font-size="16" font-weight="700" fill="#818cf8">BOREDOM ZONE</text>
+      <text x="496" y="326" text-anchor="middle" font-size="11" fill="#818cf8" opacity="0.7">High Skill · Low Cognitive Demand</text>
+      <text x="496" y="352" text-anchor="middle" font-size="11" fill="#94a3b8">Brain barely used. No novelty.</text>
+      <text x="496" y="370" text-anchor="middle" font-size="11" fill="#94a3b8">No challenge = no growth.</text>
+      <circle cx="580" cy="385" r="6" fill="#818cf8" opacity="0.85"/>
+
+      <!-- FLOW diagonal band -->
+      <polygon points="73,340 260,33 440,33 73,440" fill="rgba(52,211,153,0.07)" stroke="none"/>
+      <polygon points="260,33 640,33 640,170 73,440 73,340" fill="rgba(52,211,153,0.07)" stroke="none"/>
+      <line x1="80" y1="432" x2="632" y2="48" stroke="#34d399" stroke-width="2" stroke-dasharray="10,7" opacity="0.5"/>
+      <circle cx="356" cy="240" r="30" fill="#34d399" opacity="0.07"/>
+      <circle cx="356" cy="240" r="18" fill="#34d399" opacity="0.024"/>
+      <circle cx="356" cy="240" r="9" fill="#34d399" opacity="0.9"/>
+      <text x="430" y="155" font-family="Playfair Display,serif" font-size="15" font-weight="700" fill="#34d399" transform="rotate(-35,430,155)">⚡ FLOW STATE</text>
+      <text x="460" y="178" font-size="10" fill="#34d399" opacity="0.7" transform="rotate(-35,460,178)" font-family="JetBrains Mono,monospace">Skill ≈ Demand</text>
+
+      <text x="20" y="235" text-anchor="middle" font-size="11" fill="#60a5fa" transform="rotate(-90,20,235)" font-family="JetBrains Mono,monospace">COGNITIVE DEMAND (Difficulty) ↑</text>
+      <text x="355" y="478" text-anchor="middle" font-size="11" fill="#60a5fa" font-family="JetBrains Mono,monospace">SKILL (Your Ability) →</text>
+      <text x="75"  y="458" font-size="10" fill="#475569" font-family="JetBrains Mono,monospace">LOW</text>
+      <text x="618" y="458" font-size="10" fill="#475569" font-family="JetBrains Mono,monospace">HIGH</text>
+    </svg>
+  </div>
+  <p style="font-size:13.5px;color:var(--muted)">📊 <strong>How to read this:</strong> Move right = your skill is higher. Move up = the task is harder. The diagonal line is the balance point — your flow zone. Most students are stuck in either Boredom or Anxiety.</p>
+</section>
+
+<div class="hr"></div>
+
+<!-- ZONE 1: BOREDOM -->
+<section>
+  <span class="sec-tag">Zone 01 — Bottom Right of the Graph</span>
+  <h2 class="bore-col">The Boredom Zone</h2>
+
+  <div class="graph-wrap" style="padding:28px 24px">
+    <p class="graph-title">// Boredom Zone — Your Position on the Map</p>
+    <svg viewBox="0 0 440 230" width="100%" xmlns="http://www.w3.org/2000/svg" font-family="Manrope,sans-serif">
+      <line x1="50" y1="20" x2="50" y2="190" stroke="#60a5fa" stroke-width="1.5"/>
+      <line x1="50" y1="190" x2="420" y2="190" stroke="#60a5fa" stroke-width="1.5"/>
+      <polygon points="50,16 45,30 55,30" fill="#60a5fa"/>
+      <polygon points="424,190 410,185 410,195" fill="#60a5fa"/>
+      <rect x="230" y="110" width="188" height="78" rx="8" fill="rgba(129,140,248,0.10)" stroke="#818cf8" stroke-width="1.5" stroke-dasharray="6,4"/>
+      <line x1="319" y1="149" x2="319" y2="190" stroke="#818cf8" stroke-dasharray="4,4" stroke-width="1" opacity="0.4"/>
+      <line x1="50" y1="149" x2="319" y2="149" stroke="#818cf8" stroke-dasharray="4,4" stroke-width="1" opacity="0.4"/>
+      <circle cx="319" cy="149" r="9" fill="#818cf8"/>
+      <circle cx="319" cy="149" r="20" fill="#818cf8" opacity="0.026"/>
+      <text x="328" y="144" fill="#818cf8" font-size="11" font-weight="700">← You are here</text>
+      <text x="235" y="80" text-anchor="middle" fill="#818cf8" font-size="13" font-weight="700" font-family="Playfair Display,serif">High Skill · Low Demand</text>
+      <text x="235" y="98" text-anchor="middle" fill="#94a3b8" font-size="11">You can do the task easily. Brain barely switches on.</text>
+      <text x="235" y="220" text-anchor="middle" fill="#60a5fa" font-size="10" font-family="JetBrains Mono,monospace">SKILL →</text>
+      <text x="22" y="105" text-anchor="middle" fill="#60a5fa" font-size="10" transform="rotate(-90,22,105)" font-family="JetBrains Mono,monospace">DEMAND ↑</text>
+    </svg>
+  </div>
+
+  <div class="zone-card zone-bore">
+    <div class="zone-head"><div class="zone-dot" style="background:var(--bore)"></div><h3 class="bore-col">What "Boredom Zone" Really Means</h3></div>
+    <p>The task is too easy for your current skill. Your brain doesn't find it interesting enough to engage. There's no challenge, so there's no activation.</p>
+    <p><strong>Relatable student examples:</strong> Re-reading notes you already understand. Watching easy revision videos. Solving the same problems you've solved 10 times.</p>
+  </div>
+
+  <div class="formula">
+    <span class="formula-eq">d(Challenge)/dt &lt; d(Skill)/dt</span>
+    <span class="formula-arr">→</span>
+    <span class="f-bore">BOREDOM</span>
+  </div>
+  <p style="font-size:13.5px;color:var(--muted)">Your skill is growing faster than the difficulty. You've outgrown the task — but you're still sitting there, feeling "productive."</p>
+
+  <div class="pq"><p>"Boredom often disguises itself as productivity. Familiar is NOT the same as mastered."</p></div>
+</section>
+
+<div class="hr"></div>
+
+<!-- ZONE 2: ANXIETY -->
+<section>
+  <span class="sec-tag">Zone 02 — Top Left of the Graph</span>
+  <h2 class="anx-col">The Anxiety Zone</h2>
+
+  <div class="graph-wrap" style="padding:28px 24px">
+    <p class="graph-title">// Anxiety Zone — Your Position on the Map</p>
+    <svg viewBox="0 0 440 210" width="100%" xmlns="http://www.w3.org/2000/svg" font-family="Manrope,sans-serif">
+      <line x1="50" y1="20" x2="50" y2="180" stroke="#60a5fa" stroke-width="1.5"/>
+      <line x1="50" y1="180" x2="420" y2="180" stroke="#60a5fa" stroke-width="1.5"/>
+      <rect x="52" y="22" width="365" height="156" rx="8" fill="rgba(248,113,113,0.08)" stroke="#f87171" stroke-width="1.5" stroke-dasharray="6,4"/>
+      <circle cx="110" cy="50" r="9" fill="#f87171"/>
+      <circle cx="110" cy="50" r="20" fill="#f87171" opacity="0.026"/>
+      <line x1="110" y1="50" x2="110" y2="180" stroke="#f87171" stroke-dasharray="4,4" stroke-width="1" opacity="0.4"/>
+      <line x1="50" y1="50" x2="110" y2="50" stroke="#f87171" stroke-dasharray="4,4" stroke-width="1" opacity="0.4"/>
+      <text x="118" y="45" fill="#f87171" font-size="11" font-weight="700">← You are here</text>
+      <text x="235" y="110" text-anchor="middle" fill="#f87171" font-size="13" font-weight="700" font-family="Playfair Display,serif">Low Skill, High Challenge</text>
+      <text x="235" y="130" text-anchor="middle" fill="#94a3b8" font-size="11">Brain detects threat. Fight or flight activates.</text>
+      <text x="55" y="198" fill="#60a5fa" font-size="10" font-family="JetBrains Mono,monospace">SKILL →</text>
+      <text x="28" y="100" fill="#60a5fa" font-size="10" transform="rotate(-90,28,100)" font-family="JetBrains Mono,monospace">DEMAND ↑</text>
+    </svg>
+  </div>
+
+  <div class="zone-card zone-anx">
+    <div class="zone-head"><div class="zone-dot" style="background:var(--anx)"></div><h3 class="anx-col">What Happens in Your Brain</h3></div>
+    <p>When you try something you're not trained for, your brain doesn't say "learning opportunity." It says: <strong>Threat.</strong></p>
+    <p>A survival system — 100 million years old — activates: <strong>Fight or Flight.</strong> In academics, fight needs skills you don't have yet. So most students choose <strong>flight — avoidance.</strong></p>
+    <p><strong>Student example:</strong> You open a hard chapter. Try one question, fail. Brain goes on red alert. You feel dread before even opening the book next time. Eventually you "hate" the subject — but that's not hate, it's trained avoidance.</p>
+  </div>
+
+  <!-- NEW: Expanded anxiety explanation -->
+  <div class="anx-vicious">
+    <h4>⚠ Why This Happens — The Cognitive Overload Sequence</h4>
+    <div class="v-row">
+      <span class="v-icon">🧠</span>
+      <span class="v-text">When you attempt problems that <strong>exceed your current cognitive capacity</strong> — meaning you don't yet have the required skills — you will inevitably fail. This failure isn't a character flaw. It's a coordinate mismatch.</span>
+    </div>
+    <div class="v-row">
+      <span class="v-icon">🚨</span>
+      <span class="v-text">Your brain interprets repeated failure as a <strong>threat signal</strong> — a red alert. It doesn't distinguish between a difficult math problem and a physical danger. To your brain, both look the same: <em>something is harming you. Escape it.</em></span>
+    </div>
+    <div class="v-row">
+      <span class="v-icon">🔁</span>
+      <span class="v-text">This escape reflex creates a <strong>vicious cycle</strong>: you avoid the topic → you never improve → the next lesson feels harder → anxiety deepens → avoidance becomes habit. You are now trapped in the loop.</span>
+    </div>
+  </div>
+
+  <!-- The 4-card explainer -->
+  <div class="anx-explain">
+    <div class="anx-card">
+      <span class="ac-step">Step 01</span>
+      <h5>Low Skill Meets High Challenge</h5>
+      <p>You attempt work beyond your current training. Failure follows immediately.</p>
+    </div>
+    <div class="anx-card">
+      <span class="ac-step">Step 02</span>
+      <h5>Brain Labels It a Threat</h5>
+      <p>Repeated failure = red alert. Survival mode switches on. The subject becomes "dangerous."</p>
+    </div>
+    <div class="anx-card">
+      <span class="ac-step">Step 03</span>
+      <h5>Avoidance Kicks In</h5>
+      <p>You stop engaging. Phone. Distractions. Procrastination. Flight feels like relief — temporarily.</p>
+    </div>
+    <div class="anx-card">
+      <span class="ac-step">Step 04</span>
+      <h5>Skill Stays Low → Loop Tightens</h5>
+      <p>Because you avoided it, skill never improved. The next session feels even more threatening. Cycle repeats.</p>
+    </div>
+  </div>
+
+  <div class="formula">
+    <span class="formula-eq">d(Challenge)/dt &gt; d(Skill)/dt</span>
+    <span class="formula-arr">→</span>
+    <span class="f-anx">ANXIETY → AVOIDANCE</span>
+  </div>
+
+  <!-- CIRCULAR LOOP DIAGRAM (unchanged) -->
+  <div class="loop">
+    <span class="loop-label">// The Anxiety Feedback Loop</span>
+    <svg viewBox="0 0 500 320" width="100%" style="max-width:500px;display:block;margin:0 auto" xmlns="http://www.w3.org/2000/svg" font-family="Manrope,sans-serif">
+      <path d="M 290,52 Q 370,80 370,148" stroke="#f87171" stroke-width="2" fill="none" marker-end="url(#arrowR)"/>
+      <path d="M 365,178 Q 360,240 330,255" stroke="#f87171" stroke-width="2" fill="none" marker-end="url(#arrowR)"/>
+      <path d="M 300,272 Q 250,292 200,272" stroke="#f87171" stroke-width="2" fill="none" marker-end="url(#arrowR)"/>
+      <path d="M 168,255 Q 135,238 132,178" stroke="#f87171" stroke-width="2" fill="none" marker-end="url(#arrowR)"/>
+      <path d="M 135,148 Q 138,72 210,52" stroke="#f87171" stroke-width="2" fill="none" marker-end="url(#arrowR)"/>
+      <defs>
+        <marker id="arrowR" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+          <path d="M0,0 L0,6 L8,3 z" fill="#f87171"/>
+        </marker>
+      </defs>
+      <rect x="185" y="28"  width="130" height="34" rx="8" fill="#1e293b" stroke="#f87171" stroke-width="1.2"/>
+      <text x="250" y="50"  text-anchor="middle" fill="#f87171" font-size="12" font-weight="700">Low Skill</text>
+      <rect x="358" y="146" width="130" height="34" rx="8" fill="#1e293b" stroke="#f87171" stroke-width="1.2"/>
+      <text x="423" y="168" text-anchor="middle" fill="#e2e8f0" font-size="12" font-weight="600">Task = Threat</text>
+      <rect x="272" y="253" width="110" height="34" rx="8" fill="#1e293b" stroke="#f87171" stroke-width="1.2"/>
+      <text x="327" y="275" text-anchor="middle" fill="#e2e8f0" font-size="12" font-weight="600">Avoidance</text>
+      <rect x="118" y="253" width="140" height="34" rx="8" fill="#1e293b" stroke="#f87171" stroke-width="1.2"/>
+      <text x="188" y="275" text-anchor="middle" fill="#e2e8f0" font-size="12" font-weight="600">Skill Stays Low</text>
+      <rect x="10"  y="146" width="122" height="34" rx="8" fill="rgba(248,113,113,0.15)" stroke="#f87171" stroke-width="1.5"/>
+      <text x="71"  y="168" text-anchor="middle" fill="#f87171" font-size="12" font-weight="700">More Anxiety ↻</text>
+      <text x="250" y="152" text-anchor="middle" fill="#475569" font-size="11" font-family="JetBrains Mono,monospace">CLOSED</text>
+      <text x="250" y="168" text-anchor="middle" fill="#475569" font-size="11" font-family="JetBrains Mono,monospace">LOOP</text>
+    </svg>
+  </div>
+
+  <div class="pq"><p>"You don't actually hate the subject. Your brain was conditioned to escape it."</p></div>
+</section>
+
+<div class="hr"></div>
+
+<!-- ZONE 3: FLOW -->
+<section>
+  <span class="sec-tag">Zone 03 — The Sweet Spot</span>
+  <h2 class="flow-col">The Flow State</h2>
+
+  <div class="graph-wrap" style="padding:28px 24px">
+    <p class="graph-title">// Flow State — Your Position on the Map</p>
+    <svg viewBox="0 0 440 210" width="100%" xmlns="http://www.w3.org/2000/svg" font-family="Manrope,sans-serif">
+      <line x1="50" y1="20" x2="50" y2="180" stroke="#60a5fa" stroke-width="1.5"/>
+      <line x1="50" y1="180" x2="420" y2="180" stroke="#60a5fa" stroke-width="1.5"/>
+      <rect x="52" y="22" width="365" height="156" rx="8" fill="rgba(52,211,153,0.07)" stroke="#34d399" stroke-width="2" stroke-dasharray="6,4"/>
+      <line x1="60" y1="172" x2="410" y2="30" stroke="#34d399" stroke-width="1.5" stroke-dasharray="8,6" opacity="0.4"/>
+      <circle cx="235" cy="101" r="10" fill="#34d399" opacity="0.9"/>
+      <circle cx="235" cy="101" r="22" fill="#34d399" opacity="0.026"/>
+      <circle cx="235" cy="101" r="36" fill="#34d399" opacity="0.05"/>
+      <text x="250" y="96" fill="#34d399" font-size="11" font-weight="700">← You are here</text>
+      <text x="235" y="148" text-anchor="middle" fill="#34d399" font-size="13" font-weight="700" font-family="Playfair Display,serif">Skill ≈ Cognitive Demand</text>
+      <text x="235" y="168" text-anchor="middle" fill="#94a3b8" font-size="11">Deep learning zone. Time disappears.</text>
+      <text x="55" y="198" fill="#60a5fa" font-size="10" font-family="JetBrains Mono,monospace">SKILL →</text>
+      <text x="28" y="100" fill="#60a5fa" font-size="10" transform="rotate(-90,28,100)" font-family="JetBrains Mono,monospace">DEMAND ↑</text>
+    </svg>
+  </div>
+
+  <div class="zone-card zone-flow">
+    <div class="zone-head"><div class="zone-dot" style="background:var(--flow)"></div><h3 class="flow-col">What Flow Feels Like</h3></div>
+    <p>Your skill and the task difficulty are almost equal — with challenge pushing just slightly beyond you. Your brain fully activates. You stop checking your phone. You look up and 90 minutes are gone.</p>
+    <p><strong>Student example:</strong> A math problem that feels hard — but you know you can crack it if you think carefully. That push-pull tension? That's flow. That's where you actually learn.</p>
+  </div>
+
+  <div class="formula">
+    <span class="formula-eq">d(Challenge)/dt ≈ d(Skill)/dt</span>
+    <span class="formula-arr">→</span>
+    <span class="f-flow">⚡ FLOW — Deep Learning</span>
+  </div>
+
+  <div class="pq"><p>"Flow is the only zone where real understanding builds. Not boredom. Not anxiety. Flow."</p></div>
+</section>
+
+<div class="hr"></div>
+
+<!-- FRAMEWORK -->
+<section>
+  <span class="sec-tag">How to Apply This</span>
+  <h2>How to Study in the Flow State</h2>
+  <p>Don't just "avoid avoidance." Here's a <strong>practical system</strong> any student can use right now:</p>
+
+  <ol class="steps">
+    <li>
+      <div>
+        <h4>Diagnose Your Coordinate First</h4>
+        <p>Before studying, solve 3 questions — easy, medium, hard. Where did you start struggling? That's your current position on the map. Be honest.</p>
+        <div class="step-detail">Think of this like GPS: before navigating, you need to know where you currently are. Your coordinate on the map decides everything — which level to start at, which problems to pick, and how long to stay before pushing up.</div>
+      </div>
+    </li>
+    <li>
+      <div>
+        <h4>Build a 3–4 Level Problem Ladder</h4>
+        <p>Every subject has levels. Use your textbook or reference books that have graded questions (L1, L2, L3). Start at the level just below your struggle point.</p>
+        <div class="step-detail">Most good reference books (like HC Verma, RD Sharma, or NCERT Exemplar) naturally organize problems in increasing difficulty. Use that structure intentionally — don't jump to the hard section just because it exists.</div>
+      </div>
+    </li>
+    <li>
+      <div>
+        <h4>Climb Slowly — Check Your Zone</h4>
+        <p>Complete L1 fully → move to L2. Ask: "Am I engaged or anxious?" Engaged = flow. Anxious = slow down. Don't jump levels. Gradual is exponential.</p>
+        <div class="step-detail">After every level transition, pause and check in. Does the problem feel stretching but solvable? That's flow — stay there. Does it feel impossible? That's anxiety — drop back one level and rebuild. Your brain signals its zone clearly; you just need to listen.</div>
+      </div>
+    </li>
+    <li>
+      <div>
+        <h4>Spend 70% of Time at L2 and L3</h4>
+        <p>This is your permanent flow zone. Challenging but doable. This is where skill actually compounds — not in re-reading easy notes.</p>
+        <div class="step-detail">L1 builds your base — spend 15–20% here when starting a topic. L2 and L3 are where your brain is fully activated and memory encoding is strongest — this is your 70%. L4 is aspirational — visit it only once L3 feels comfortable. Never force L4 when you're still shaky at L2.</div>
+      </div>
+    </li>
+  </ol>
+
+  <div class="ladder">
+    <div class="rung rung-1">
+      <span class="rung-num">L1</span>
+      <div class="rung-body">
+        <div class="rung-info"><h5>Foundation</h5><p>Basic concepts, definitions, solved examples from textbook</p></div>
+        <div class="rung-detail">Start here when a topic is brand new. Read through solved examples, understand the logic step-by-step. Don't skip this even if it feels easy — it builds the neural base your brain needs before it can handle harder problems.</div>
+      </div>
+      <span class="rung-badge" style="background:rgba(96,165,250,0.1);color:#60a5fa">Build Base</span>
+    </div>
+    <div class="rung rung-2">
+      <span class="rung-num">L2</span>
+      <div class="rung-body">
+        <div class="rung-info"><h5>Application</h5><p>Direct formula use, standard exam-style problems</p></div>
+        <div class="rung-detail">This is where exam questions typically live. You need to apply what you learned in L1 to solve problems independently — without looking at the solution first. If you get stuck, try for 10 minutes before checking. That struggle is the learning.</div>
+      </div>
+      <span class="rung-badge badge-flow">⚡ Flow Zone</span>
+    </div>
+    <div class="rung rung-3">
+      <span class="rung-num">L3</span>
+      <div class="rung-body">
+        <div class="rung-info"><h5>Analysis</h5><p>Multi-step problems, combining 2–3 concepts</p></div>
+        <div class="rung-detail">These problems don't have a single formula path. You have to think, connect ideas, and work through multiple steps. This is where real understanding develops. If L2 is solid, L3 will feel challenging but doable — exactly where your brain needs to be.</div>
+      </div>
+      <span class="rung-badge badge-flow">⚡ Flow Zone</span>
+    </div>
+    <div class="rung rung-4">
+      <span class="rung-num">L4</span>
+      <div class="rung-body">
+        <div class="rung-info"><h5>Challenge</h5><p>Competition-level, tricky edge cases</p></div>
+        <div class="rung-detail">Olympiad-style, JEE Advanced-level, or questions that require creative insight. Attempting these before mastering L2–L3 will push you into the Anxiety Zone. Earn your way here by genuinely mastering the levels below — then L4 becomes exciting, not threatening.</div>
+      </div>
+      <span class="rung-badge badge-anx">Reach for Later</span>
+    </div>
+  </div>
+  <p style="font-size:13.5px;color:var(--muted);margin-top:8px">👆 Most students skip to L4 and end up in the Anxiety Zone. Stay at L2–L3 until mastery. Then climb.</p>
+</section>
+
+<!-- CLOSING -->
+<div class="closing">
+  <h2>Stop Fighting Your Brain.<br>Start Reading the Map.</h2>
+  <div class="line"></div>
+  <p>"Learning fails not from lack of effort — but from misalignment."</p>
+  <p style="margin-top:14px">Bored? Raise the difficulty.<br>Anxious? Step back, rebuild from L1.<br>In Flow? Protect it. That's where everything changes.</p>
+</div>
+
+</main>
+</body>
+</html>
